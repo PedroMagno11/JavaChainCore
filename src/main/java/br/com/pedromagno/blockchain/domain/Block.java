@@ -1,25 +1,46 @@
 package br.com.pedromagno.blockchain.domain;
 
-import br.com.pedromagno.blockchain.service.BlockService;
-
+import br.com.pedromagno.blockchain.utils.StringUtil;
 import java.util.Date;
 
 /**
+ * Cada bloco em uma blockchain tem sua própria "impressão digital", contém
+ * a "impressão digital" do bloco anterior e alguns dados como transações, por
+ * exemplo.
+ *
+ * Hash = "impressão digital"
+ *
+ * Cada bloco contém o hash do bloco anterior e seu próprio hash.
+ *
  * @author Pedro Magno <pedromagnopro@gmail.com>
  * @since 30/01/2025
  */
 
 public class Block {
-    private String hash;
-    private String previousHash;
-    private String data; // o nosso dado será uma simples mensagem
-    private long timestamp; // millisegundos desde 01/01/1970
 
-    // Contrutor do bloco
-    public Block(String data, String previousHash) {
+    public String hash;
+    public String previousHash;
+    private String data;
+    private long timeStamp; // tempo em millisegundos desde 01/01/1970
+    private int nonce;
+
+
+    public Block(String data,String previousHash ) {
         this.data = data;
         this.previousHash = previousHash;
-        this.timestamp = new Date().getTime(); // tempo em milissegundos desde 01/01/1970
+        this.timeStamp = new Date().getTime();
+
+        this.hash = calculateHash();
+    }
+
+    //Calcula o novo hash baseado no conteúdo do block
+    public String calculateHash() {
+        return StringUtil.applySha256(
+                previousHash +
+                        Long.toString(timeStamp) +
+                        Integer.toString(nonce) +
+                        data
+        );
     }
 
     public String getHash() {
@@ -34,23 +55,22 @@ public class Block {
         return previousHash;
     }
 
-    public void setPreviousHash(String previousHash) {
-        this.previousHash = previousHash;
-    }
 
     public String getData() {
         return data;
     }
 
-    public void setData(String data) {
-        this.data = data;
+
+    public long getTimeStamp() {
+        return timeStamp;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+
+    public int getNonce() {
+        return nonce;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setNonce(int nonce) {
+        this.nonce = nonce;
     }
 }

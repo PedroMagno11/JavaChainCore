@@ -1,8 +1,8 @@
-package br.com.pedromagno.blockchain.domain.factory;
+package br.com.pedromagno.blockchain.service.factory;
 
 
 import br.com.pedromagno.blockchain.domain.Block;
-import br.com.pedromagno.blockchain.service.BlockService;
+import br.com.pedromagno.blockchain.service.MiningService;
 
 /**
  * Esta classe é responsável por construir instâncias padronizadas
@@ -16,9 +16,7 @@ import br.com.pedromagno.blockchain.service.BlockService;
 public class BlockFactory {
     // Cria uma instância padronizada do Block
     public static Block createBlock(String data, String previousHash){
-        Block block = new Block(data, previousHash);
-        block.setHash(BlockService.calculateHash(block));
-        return block;
+        return new Block(data, previousHash);
     }
 
 }

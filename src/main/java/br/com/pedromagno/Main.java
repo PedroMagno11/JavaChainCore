@@ -1,17 +1,32 @@
 package br.com.pedromagno;
 
+import java.util.ArrayList;
+
 import br.com.pedromagno.blockchain.domain.Block;
-import br.com.pedromagno.blockchain.domain.factory.BlockFactory;
+import br.com.pedromagno.blockchain.domain.Blockchain;
+import br.com.pedromagno.blockchain.service.BlockchainService;
+import br.com.pedromagno.blockchain.utils.StringUtil;
 
 public class Main {
+
+    public static ArrayList<Block> blockchain = Blockchain.getInstance().getChain();
+
     public static void main(String[] args) {
-        Block genesisBlock = BlockFactory.createBlock("Hi i'm the first block", "0");
-        System.out.println("Hash for block 1: " + genesisBlock.getHash());
 
-        Block secondBlock = BlockFactory.createBlock("Hi i'm the second block", genesisBlock.getHash());
-        System.out.println("Hash for block 2: " + secondBlock.getHash());
+        System.out.println("Tentando minerar o primeiro bloco...");
+        BlockchainService.addBlock(new Block("Olá, eu sou o primeiro bloco", "0"));
 
-        Block thirdBlock = BlockFactory.createBlock("Hi i'm the third block", secondBlock.getHash());
-        System.out.println("Hash for block 3: " + thirdBlock.getHash());
+        System.out.println("Tentando minerar o segundo bloco...");
+        BlockchainService.addBlock(new Block("Olá, eu sou o segundo bloco",blockchain.getLast().hash));
+
+        System.out.println("Tentando minerar o terceiro bloco... ");
+        BlockchainService.addBlock(new Block("Olá, eu sou o terceiro bloco",blockchain.getLast().hash));
+
+        System.out.println("\nA Blockchain é válida ? " + BlockchainService.isChainValid());
+
+        String blockchainJson = StringUtil.getJson(blockchain);
+        System.out.println("\nBlockchain: ");
+        System.out.println(blockchainJson);
     }
+
 }
